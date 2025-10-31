@@ -26,6 +26,22 @@ export default function Home({ data }) {
   let categoryArray
   const [typeFilter, setTypeFilter] = useState(false)
   const foodData = []
+  const [pizzas, setPizzas] = useState([])
+
+  useEffect(() => {
+    const fetchPizzas = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pizzas`
+        )
+        setPizzas(res.data)
+      } catch (error) {
+        console.error('Error fetching pizzas:', error)
+      }
+    }
+
+    fetchPizzas()
+  }, [])
   const handleData = () => {
     data?.map((data) => {
       return foodData.push(data), categories.add(data.category)
