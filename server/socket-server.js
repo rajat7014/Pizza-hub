@@ -71,9 +71,9 @@ setInterval(() => {
   }
 }, 4000)
 
-const PORT = 1000
-server.listen(PORT, () =>
-  console.log(`Socket demo server running on http://localhost:${PORT}`)
+const PORT = process.env.PORT || 1000
+server.listen(PORT, '0.0.0.0', () =>
+  console.log(`Server running on port ${PORT}`)
 )
 
 // Directions API route for accurate ETA
