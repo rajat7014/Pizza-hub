@@ -71,7 +71,7 @@ setInterval(() => {
   }
 }, 4000)
 
-const PORT = 4000
+const PORT = 1000
 server.listen(PORT, () =>
   console.log(`Socket demo server running on http://localhost:${PORT}`)
 )
