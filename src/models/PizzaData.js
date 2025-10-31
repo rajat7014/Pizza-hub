@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const dataSchema = new mongoose.Schema(
   {
@@ -8,12 +8,15 @@ const dataSchema = new mongoose.Schema(
     price: { type: Object, required: true },
     description: { type: String, required: true },
     img: { type: String, required: true },
+    desc: { type: String },
+    tags: [{ type: String }],
+    priority: { type: Number, default: 3 },
   },
 
   { timestamps: true }
-);
+)
 
 const PizzaData =
-  mongoose.models.PizzaData || mongoose.model("PizzaData", dataSchema);
+  mongoose.models.PizzaData || mongoose.model('PizzaData', dataSchema)
 
-export default PizzaData;
+export default PizzaData
