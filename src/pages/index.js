@@ -33,7 +33,7 @@ export default function Home({ data }) {
     const fetchPizzas = async () => {
       try {
         const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pizzas`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/foodData`
         )
         setPizzas(res.data)
       } catch (error) {
