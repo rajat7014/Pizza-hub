@@ -7,6 +7,7 @@ import { baseUrl } from '@/utils/baseUrl'
 import Head from 'next/head'
 import { Geist, Geist_Mono } from 'next/font/google'
 import ChatAssistant from '@/components/ChatAssistant'
+import axios from 'axios'
 // import Recommendations from '@/components/Recommendations'
 
 const geistSans = Geist({
