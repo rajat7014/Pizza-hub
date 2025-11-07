@@ -1,45 +1,43 @@
-import Orders from "@/models/Orders";
-import db from "@/utils/db";
+import Orders from '@/models/Orders'
+import db from '@/utils/db'
 
 export default async function handler(req, res) {
-  if (req.method === "POST") {
-    await db.connect();
-    try {
-      if (req.body.email === undefined || req.body.email === null) {
-        throw new Error();
-      }
-      let data = req.body.order_data;
-      await data.splice(0, 0, { order_date: req.body.order_date });
+  try {
+    await db.connect()
 
-      let eId = await Orders.findOne({ email: req.body.email });
-      if (eId === null) {
-        try {
-          await Orders.create({
-            email: req.body.email,
-            order_data: [data],
-          }).then(() => {
-            res.json({ success: true });
-          });
-        } catch (error) {
-          res.send("Server error: ", error.message);
-        }
+    if (req.method === 'POST') {
+      const { email, order_data, order_date } = req.body
+
+      if (!email || !order_data)
+        return res.status(400).json({ error: 'Missing fields' })
+
+      const existingOrder = await Orders.findOne({ email })
+
+      if (existingOrder) {
+        await Orders.findOneAndUpdate(
+          { email },
+          {
+            $push: {
+              order_data: { $each: order_data, $position: 0 },
+              order_date,
+            },
+          }
+        )
       } else {
-        try {
-          await Orders.findOneAndUpdate(
-            { email: req.body.email },
-            { $push: { order_data: data } }
-          ).then(() => {
-            res.json({ success: true });
-          });
-        } catch (error) {
-          res.status(400).send("Server error: ", error.message);
-        }
+        await Orders.create({ email, order_data: [order_data], order_date })
       }
-    } catch (error) {
-      res.status(400).json({ success: false });
-    }
 
-    await db.disconnect();
-    //{order_data:[{Date},{MAr},{Peppy},{}],email: "", order_date:Date() }
+      return res.status(200).json({ success: true })
+    } else if (req.method === 'GET') {
+      const allOrders = await Orders.find({})
+      return res.status(200).json(allOrders)
+    } else {
+      return res.status(405).json({ error: 'Method not allowed' })
+    }
+  } catch (error) {
+    console.error('OrdersData Error:', error)
+    return res.status(500).json({ error: 'Internal server error' })
+  } finally {
+    await db.disconnect()
   }
 }
